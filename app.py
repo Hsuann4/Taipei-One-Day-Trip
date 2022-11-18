@@ -133,6 +133,8 @@ def pageAndfilter():
                     listtest.append(imageRawlist)
 
 
+
+
             #處理篩選後的欄位值
             pageResultlist = []
             for i in range(len(keywordResult)):
