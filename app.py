@@ -64,7 +64,7 @@ def pageAndfilter():
                 nextpage = None
 
             #處理未篩選內容
-            page1query = "SELECT * FROM attraction ORDER BY attid LIMIT %s , 12;"
+            page1query = "SELECT * FROM Attraction ORDER BY attid LIMIT %s , 12;"
             pageInfo = (((pageInput)*12),)
             cursor.execute(page1query, pageInfo)
             p1result = cursor.fetchall()
@@ -110,7 +110,7 @@ def pageAndfilter():
 
             #處理篩選資料後的頁碼
             cursor = conn.cursor(buffered=True)
-            pageCountquery = "SELECT ceil(count(*)/12) FROM attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s);"
+            pageCountquery = "SELECT ceil(count(*)/12) FROM Attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s);"
             criteria = (keywordInput,keywordInput)
             cursor.execute(pageCountquery, criteria)
             pageTotal = cursor.fetchall()
@@ -121,7 +121,7 @@ def pageAndfilter():
                 nextpage = None
                 
             #處理篩選資料後的內容
-            keywordResultquery = "SELECT * FROM attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s) LIMIT %s, 12 ;"
+            keywordResultquery = "SELECT * FROM Attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s) LIMIT %s, 12 ;"
             criteria = (keywordInput, keywordInput,((pageInput)*12))
             cursor.execute(keywordResultquery,criteria)
             keywordResult = cursor.fetchall()
