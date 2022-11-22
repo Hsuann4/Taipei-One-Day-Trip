@@ -1,17 +1,14 @@
 
-import mysql.connector
 import json
+import mysql.connector
 from flask import *
 from flask import request
 from flask import jsonify
-
-
-
+from werkzeug.exceptions import HTTPException
 
 conn = mysql.connector.connect(
     user='root', password='Dennis860404_', database='Taipei_API'
 )
-conn.reconnect(attempts=1, delay=0)
 
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
@@ -20,28 +17,8 @@ app.config['JSON_SORT_KEYS'] = False
 
 
 
-# Pages
-@app.route("/")
-def index():
-	return render_template("index.html")
-@app.route("/attraction/<id>")
-def attraction(id):
-	return render_template("attraction.html")
-@app.route("/booking")
-def booking():
-	return render_template("booking.html")
-@app.route("/thankyou")
-def thankyou():
-	return render_template("thankyou.html")
 
-
-
-
-
-#API
-
-
-@app.route("/api/attractions") #第一隻api
+@app.route("/api/attractions")
 def pageAndfilter():
     
         #網址抓值
@@ -65,7 +42,7 @@ def pageAndfilter():
                 nextpage = None
 
             #處理未篩選內容
-            page1query = "SELECT * FROM Attraction ORDER BY attid LIMIT %s , 12;"
+            page1query = "SELECT * FROM attraction ORDER BY attid LIMIT %s , 12;"
             pageInfo = (((pageInput)*12),)
             cursor.execute(page1query, pageInfo)
             p1result = cursor.fetchall()
@@ -111,7 +88,7 @@ def pageAndfilter():
 
             #處理篩選資料後的頁碼
             cursor = conn.cursor(buffered=True)
-            pageCountquery = "SELECT ceil(count(*)/12) FROM Attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s);"
+            pageCountquery = "SELECT ceil(count(*)/12) FROM attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s);"
             criteria = (keywordInput,keywordInput)
             cursor.execute(pageCountquery, criteria)
             pageTotal = cursor.fetchall()
@@ -122,7 +99,7 @@ def pageAndfilter():
                 nextpage = None
                 
             #處理篩選資料後的內容
-            keywordResultquery = "SELECT * FROM Attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s) LIMIT %s, 12 ;"
+            keywordResultquery = "SELECT * FROM attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s) LIMIT %s, 12 ;"
             criteria = (keywordInput, keywordInput,((pageInput)*12))
             cursor.execute(keywordResultquery,criteria)
             keywordResult = cursor.fetchall()
@@ -132,8 +109,6 @@ def pageAndfilter():
             for i in range(len(keywordResult)):
                     imageRawlist = keywordResult[i][10]
                     listtest.append(imageRawlist)
-
-
 
 
             #處理篩選後的欄位值
@@ -216,6 +191,7 @@ def findbyattid(attractionId):
 
 
 
+
 @app.route("/api/categories") #第三隻api
 def findCat():
 	
@@ -225,9 +201,9 @@ def findCat():
 	catList = cursor.fetchall()
 	
 	finalList = []
+    
 	for i in range(len(catList)):
 		finalList.append(catList[i][0])
-	
 	
 	return jsonify({"data":finalList})
 
@@ -244,5 +220,5 @@ def handle_exception(e):
     
     return response
 
-if __name__ == '__main__':
-    app.run(host = '0.0.0.0',port=3000, debug = True)
+    
+app.run(port=5000, debug = True)
