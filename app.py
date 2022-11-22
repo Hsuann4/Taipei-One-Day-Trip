@@ -11,6 +11,7 @@ from flask import jsonify
 conn = mysql.connector.connect(
     user='root', password='Dennis860404_', database='Taipei_API'
 )
+conn.reconnect(attempts=1, delay=0)
 
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
