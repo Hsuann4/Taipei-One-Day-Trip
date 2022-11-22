@@ -4,7 +4,7 @@ import json
 from flask import *
 from flask import request
 from flask import jsonify
-
+from flask_cors import CORS
 
 
 
@@ -14,6 +14,7 @@ conn = mysql.connector.connect(
 conn.reconnect(attempts=1, delay=0)
 
 app=Flask(__name__)
+CORS(app)
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.config['JSON_SORT_KEYS'] = False
