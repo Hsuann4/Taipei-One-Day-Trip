@@ -147,35 +147,35 @@
     
     
     <script>
-        // fetch("http://54.205.131.239:3000/api/attractions?page=0").then(function(response){ return response.json();}).then(function(data){
-        //     // console.log(data);
-        //     // console.log(data.data[0]);
-        //     // console.log(data.data[0].name);
-        //     // console.log(data.data[0].category);
-        //     // console.log(data.data[0].mrt);
-        //     // console.log(data.data[0].images[0]);
+        fetch("http://54.205.131.239:3000/api/attractions?page=0").then(function(response){ return response.json();}).then(function(data){
+            // console.log(data);
+            // console.log(data.data[0]);
+            // console.log(data.data[0].name);
+            // console.log(data.data[0].category);
+            // console.log(data.data[0].mrt);
+            // console.log(data.data[0].images[0]);
 
 
             
-        //     for (i = 0; i < data.data.length; i++) {
+            for (i = 0; i < data.data.length; i++) {
             
-        //         let gettag = document.getElementById('namespan'+[i]);
-        //     gettag.innerHTML=(data.data[i].name);
+                let gettag = document.getElementById('namespan'+[i]);
+            gettag.innerHTML=(data.data[i].name);
 
-        //     let gettag1 = document.getElementById('mrtspan'+[i]);
-        //     gettag1.innerHTML=(data.data[i].mrt);
+            let gettag1 = document.getElementById('mrtspan'+[i]);
+            gettag1.innerHTML=(data.data[i].mrt);
 
-        //     let gettag2 = document.getElementById('categoryspan'+[i]);
-        //     gettag2.innerHTML=(data.data[i].category);
+            let gettag2 = document.getElementById('categoryspan'+[i]);
+            gettag2.innerHTML=(data.data[i].category);
 
 
-        //     let insert_pic = document.createElement('img');
-        //         insert_pic.classList.add('insert_pic');
-        //         insert_pic.setAttribute('src', data.data[i].images[0]);
-        //         document.getElementById('imagespan'+[i]).appendChild(insert_pic);
-        //     };
+            let insert_pic = document.createElement('img');
+                insert_pic.classList.add('insert_pic');
+                insert_pic.setAttribute('src', data.data[i].images[0]);
+                document.getElementById('imagespan'+[i]).appendChild(insert_pic);
+            };
 
-        // });
+        });
 
         // 打第一頁資料
 
@@ -328,7 +328,8 @@
            const categorySpan = document.createElement('span');
            categorySpan.textContent= categoryList[i];
            categorySpan.classList.add('insert_categotySpan');
-           categorySpan.setAttribute('onlick',Fillin(this));
+           categorySpan.setAttribute('id','insertcat');
+           
            document.querySelector('#forcategorylist').appendChild(categorySpan);
         
             }
@@ -343,17 +344,27 @@
 
         function changeToabout() {
 
-        let showspan = document.getElementById('forcategorylist');
+        let showspan = document.querySelector('forcategorylist');
         showspan.style.display =    "block";
-
         }
 
-        function Fillin(elem){
+        var insertvalue = document.querySelector('.insert_categotySpan');
+        console.log(insertvalue);
+        
+        // insertvalue.addEventListener('click', Fillin);
 
 
+        // function Fillin(){
+        //     x = insertvalue.innerHTML;
+        //     console.log(x)};
+
+            
 
 
-        }
+        // // }
+
+
+        
 
 
 
