@@ -10,28 +10,19 @@ from flask_cors import CORS
 
 
 
-#建立連接池
-dbconfig = {
-  "database": "Taipei_API",
-  "user":     "root",
-  "password": "Dennis860404_",
-}
 
-cnx = mysql.connector.connect(pool_name = "mypool",
-                              pool_size = 5, autocommit = True,
-                              **dbconfig)
 
 
 # cnx = mysql.connector.connect(pool_name = "mypool", pool_size = 5)
 # cnx = mysql.connector.connect(pool_name = "mypool", **dbconfig)
 # cnx = mysql.connector.connect(pool_name = "mypool")
 
-# conn = mysql.connector.connect(
-#     user='root', password='Dennis860404_', database='Taipei_API'
-# )
+conn = mysql.connector.connect(
+    user='root', password='Dennis860404_', database='Taipei_API'
+)
 
-# conn.reconnect(attempts=1,delay=0)
-cnx.reconnect(attempts=1, delay=0)
+conn.reconnect(attempts=1,delay=0)
+
 
 app=Flask(__name__)
 
@@ -58,7 +49,22 @@ def thankyou():
 
 
 
+#建立連接池
+# dbconfig = {
+#   "database": "Taipei_API",
+#   "user":     "root",
+#   "password": "Dennis860404_",
+# }
 
+# cnx = mysql.connector.pooling.MySQLConnectionPool(pool_name = "mypool",
+#                               pool_size = 5, autocommit = True,
+#                               **dbconfig)
+
+# cnx.reconnect(attempts=1, delay=0)
+
+# cursor = cnx.get_connection()
+
+cursor = conn.cursor()
 
 #API
 
@@ -75,12 +81,17 @@ def pageAndfilter():
 
         if  inputCondition_page is not None and inputCondition_keyword is None:
             #處理未篩選頁碼
-            cursor = cnx.cursor(buffered=True)
+            cursor = conn.cursor(buffered =True)
+            # cursor = conn.cursor(buffered= True)
+           
             pageCountquery = "SELECT ceil(count(*)/12) AS pageTotal FROM  Attraction;"
             cursor.execute(pageCountquery)
             pageTotal = cursor.fetchall()
             pageTotal1 = pageTotal[0][0]
-            # conn.commit()
+            conn.commit()
+            # cursor.close()
+            # cnx1.close()
+            
             
             
             if pageInput + 1 < pageTotal1:
@@ -89,12 +100,14 @@ def pageAndfilter():
                 nextpage = None
 
             #處理未篩選內容
-            cursor = cnx.cursor(buffered=True)
+            cursor = conn.cursor(buffered =True)
+            # cursor = conn.cursor(buffered=True)
             page1query = "SELECT * FROM Attraction ORDER BY attid LIMIT %s , 12;"
-            pageInfo = (((pageInput)*12),)
+            pageInfo = ((str((pageInput)*12)),)
             cursor.execute(page1query, pageInfo)
             p1result = cursor.fetchall()
-            # conn.commit()
+            conn.commit()
+            # cursor.close()
             
 
             #處理未篩選圖片連結
@@ -138,15 +151,16 @@ def pageAndfilter():
         
 
             #處理篩選資料後的頁碼
-            
-            cursor = cnx.cursor(buffered=True)
+            cursor = conn.cursor(buffered =True)
+            # cursor = cnx.get_connection()
             pageCountquery = "SELECT ceil(count(*)/12) FROM Attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s);"
             criteria = (keywordInput,keywordInput)
             cursor.execute(pageCountquery, criteria)
             pageTotal = cursor.fetchall()
-            # cnx.commit()
+            conn.commit()
             # cursor.close()
-            # cnx.close()
+           
+            
             finalPagenumber = pageTotal[0][0] 
             if pageInput + 1 < finalPagenumber:
                 nextpage = pageInput + 1
@@ -155,12 +169,14 @@ def pageAndfilter():
             
             
             #處理篩選資料後的內容
-            cursor = cnx.cursor(buffered=True)
+            cursor = conn.cursor(buffered =True)
+            # cursor = cnx.get_connection()
             keywordResultquery = "SELECT * FROM Attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s) LIMIT %s, 12 ;"
             criteria = (keywordInput, keywordInput,((pageInput)*12))
             cursor.execute(keywordResultquery,criteria)
             keywordResult = cursor.fetchall()
-            # cnx.commit()
+            conn.commit()
+            # cursor.close()
            
             
             #處理篩選資料後的圖面網址
@@ -198,9 +214,9 @@ def pageAndfilter():
                             "data": pageResultlist
             })
                 
-            cnx.commit()
-            cursor.close()
-            cnx.close()
+            # cnx2.commit()
+            # cursor.close()
+            # cnx.close()
 
                 
 
@@ -209,12 +225,12 @@ def pageAndfilter():
 @app.route("/api/attraction/<attractionId>") #第二隻api
 def findbyattid(attractionId):
     index = attractionId
-    cursor = cnx.cursor(buffered=True)
-    
+    # cursor = cnx.get_connection()
+    cursor = conn.cursor(buffered =True)
     errorcheckQuery = "SELECT attid FROM Attraction;"
     cursor.execute(errorcheckQuery)
     checkRawlist = cursor.fetchall()
-    # cnx.commit()
+    # cnx1.commit()
     # cursor.close()
     # cnx.close()
     
@@ -224,12 +240,13 @@ def findbyattid(attractionId):
     
     
     if int(index) in checklist:
-        
-        cursor = cnx.cursor(buffered=True)
+        cursor = conn.cursor(buffered =True)
+        # cursor = cnx.get_connection()
         query = "SELECT *  FROM Attraction WHERE attid = %s;"
         criteria = (index, )
         cursor.execute(query, criteria)
         resultList = cursor.fetchall()
+        conn.commit()
         # cnx.commit()
         # cursor.close()
         # cnx.close()
@@ -263,26 +280,48 @@ def findbyattid(attractionId):
         return jsonify({"error": True,
                         "message":"伺服器錯誤"})
         
-    cnx.commit()
-    cursor.close()
-    cnx.close()
-
-
-@app.route("/api/categories") #第三隻api
-def findCat():
-	
-	cursor = cnx.cursor(buffered=True)
-	query = "SELECT DISTINCT category FROM Attraction;"
-	cursor.execute(query)
-	catList = cursor.fetchall()
-   
   
-	finalList = []
+    # cursor.close()
+    
 
-	for i in range(len(catList)):
-		finalList.append(catList[i][0])
 
-	return jsonify({"data": finalList})
+@app.route("/api/categories")
+def findCat():
+    # cursor = cnx.get_connection()
+    cursor = conn.cursor(buffered =True)
+    query = "SELECT DISTINCT category FROM Attraction;"
+    cursor.execute(query)
+    catList = cursor.fetchall
+    conn.commit
+    
+    finalList = []
+    for i in range(len(catList)):
+        finalList.append([i][0])
+        # conn.commit()
+        # cursor.close()
+        
+        return jsonify({'data': finalList})
+    
+        # cnx.close()
+    
+    
+    
+
+# @app.route("/api/categories") #第三隻api
+# def findCat():
+	
+# 	cursor = conn.cursor(buffered=True)
+# 	query = "SELECT DISTINCT category FROM Attraction;"
+# 	cursor.execute(query)
+# 	catList = cursor.fetchall()
+#     conn.commit
+    
+#     finalList = []
+# 	for i in range(len(catList)):
+# 		finalList.append(catList[i][0])
+
+    
+#     return jsonify({"data": finalList})
 
 
 
@@ -297,10 +336,7 @@ def handle_exception(e):
     response.content_type = "application/json"
     
     return response
-    cnx.commit()
-    cursor.close()
-    cnx.close()
-    
+   
 
 
 if __name__ == '__main__':
