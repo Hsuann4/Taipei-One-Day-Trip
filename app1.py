@@ -68,7 +68,7 @@ def pageAndfilter():
 
             #處理未篩選內容
             page1query = "SELECT * FROM Attraction ORDER BY attid LIMIT %s , 12;"
-            pageInfo = (((pageInput)*12),)
+            pageInfo = (str(((pageInput))*12),)
             cursor.execute(page1query, pageInfo)
             p1result = cursor.fetchall()
 
