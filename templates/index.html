@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Homepage</title>
+        <link href='/static/index.css' rel ="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="navigation_bar">
+            <span class="navigation_left">台北一日遊</span>
+            <span class="navigation_right">
+                <a class="navigation_click">預定行程</a>
+                <a class="navigation_click">登入/註冊</a>
+            </span>
+        </div>
+
+
+        <div classs="solgan_container">
+            <img class="BG" src="/static/welcome.png" alt="Taipei_101">
+           
+            <span class="solgan_1">輕鬆享受台北一日悠閒</span><br>
+            <span class="solgan_2">探索每個角落，體驗城市的深度旅遊行程</span></br>
+            <span style="display: none;" class='forcategorylist' id="forcategorylist"></span>
+
+            <form action="", method = "GET">
+            <input  onclick="changeToabout()" class="searchinput" type="text" placeholder="輸入景點名稱查詢" autocomplete="on"/>
+            <button type= 'submit' class="search_button"><img src="/static/icon_search.png"/></button>
+            </form>
+            
+        </div>
+
+      
+        
+       
+            <div class="container">
+                <div id ='test' class="content_box">
+                    <span id="imagespan0" class="image"></span>
+                    <span id="namespan0" class="title"></span>
+                    <div id="mrtspan0"class="mrt"></div>
+                    <div id="categoryspan0" class="category"></div>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan1" class="image"></span>
+                    <span id="namespan1" class="title"></span>
+                    <span id="mrtspan1"class="mrt"></span>
+                    <span id="categoryspan1" class="category"></span>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan2" class="image"></span>
+                    <span id="namespan2" class="title"></span>
+                    <span id="mrtspan2"class="mrt"></span>
+                    <span id="categoryspan2" class="category"></span>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan3" class="image"></span>
+                    <span id="namespan3" class="title"></span>
+                    <span id="mrtspan3"class="mrt"></span>
+                    <span id="categoryspan3" class="category"></span>
+                </div>
+            </div>
+
+            
+
+            <div class="container">
+            
+                <div id ='test' class="content_box">
+                    <span id="imagespan4" class="image"></span>
+                    <span id="namespan4" class="title"></span>
+                    <span id="mrtspan4"class="mrt"></span>
+                    <span id="categoryspan4" class="category"></span>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan5" class="image"></span>
+                    <span id="namespan5" class="title"></span>
+                    <span id="mrtspan5"class="mrt"></span>
+                    <span id="categoryspan5" class="category"></span>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan6" class="image"></span>
+                    <span id="namespan6" class="title"></span>
+                    <span id="mrtspan6"class="mrt"></span>
+                    <span id="categoryspan6" class="category"></span>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan7" class="image"></span>
+                    <span id="namespan7" class="title"></span>
+                    <span id="mrtspan7"class="mrt"></span>
+                    <span id="categoryspan7" class="category"></span>
+                </div>
+        
+            </div>
+
+
+            <div class="container">
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan8" class="image"></span>
+                    <span id="namespan8" class="title"></span>
+                    <span id="mrtspan8"class="mrt"></span>
+                    <span id="categoryspan8" class="category"></span>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan9" class="image"></span>
+                    <span id="namespan9" class="title"></span>
+                    <span id="mrtspan9"class="mrt"></span>
+                    <span id="categoryspan9" class="category"></span>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan10" class="image"></span>
+                    <span id="namespan10" class="title"></span>
+                    <span id="mrtspan10"class="mrt"></span>
+                    <span id="categoryspan10" class="category"></span>
+                </div>
+
+                <div id ='test' class="content_box">
+                    <span id="imagespan11" class="image"></span>
+                    <span id="namespan11" class="title"></span>
+                    <span id="mrtspan11"class="mrt"></span>
+                    <span id="categoryspan11" class="category"></span>
+                </div>
+
+            </div>
+       
+        <div  class="newcontainer">
+            
+
+        </div>
+
+        
+
+       
+    </body>
+    
+    
+    
+    <script>
+        // fetch("http://54.205.131.239:3000/api/attractions?page=0").then(function(response){ return response.json();}).then(function(data){
+        //     // console.log(data);
+        //     // console.log(data.data[0]);
+        //     // console.log(data.data[0].name);
+        //     // console.log(data.data[0].category);
+        //     // console.log(data.data[0].mrt);
+        //     // console.log(data.data[0].images[0]);
+
+
+            
+        //     for (i = 0; i < data.data.length; i++) {
+            
+        //         let gettag = document.getElementById('namespan'+[i]);
+        //     gettag.innerHTML=(data.data[i].name);
+
+        //     let gettag1 = document.getElementById('mrtspan'+[i]);
+        //     gettag1.innerHTML=(data.data[i].mrt);
+
+        //     let gettag2 = document.getElementById('categoryspan'+[i]);
+        //     gettag2.innerHTML=(data.data[i].category);
+
+
+        //     let insert_pic = document.createElement('img');
+        //         insert_pic.classList.add('insert_pic');
+        //         insert_pic.setAttribute('src', data.data[i].images[0]);
+        //         document.getElementById('imagespan'+[i]).appendChild(insert_pic);
+        //     };
+
+        // });
+
+        // 打第一頁資料
+
+
+
+        // 找標的物件
+
+       
+        // // 法一
+        // const intersectionObserver = new IntersectionObserver((entries) => {
+        //     // console.log(entries);
+        //     if (entries[0].isIntersecting){
+
+               
+
+        //         console.log("got it");
+        //         intersectionObserver.unobserve(entries[0].target) //觀察完第一筆 載入後 就要去抓nextpage
+        //         // intersectionObserver.observe(document.querySelector('.category_last'))
+        //         // return loadNewCards()
+
+
+
+
+        //     }else{
+        //         console.log("leaving");
+        //     }
+
+        // });
+       
+
+        // intersectionObserver.observe(document.querySelector('#categoryspan11'));
+
+
+        
+        // 法二
+        // window.addEventListener('scroll', ()=>{
+        //     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        //     const scrolled = window.scrollY;
+
+        //     if(scrolled === scrollable){
+
+
+        //         loadNewCards();
+
+        //     }
+
+
+        // })
+
+
+
+
+
+
+        // 載入新的分頁
+        // function loadNewCards(){
+        //     let i = 0;
+        //     while(i < 11){
+        //         fetch('http://54.205.131.239:3000/api/attractions?page=1').then(function(response){return response.json();}).then(function(data){
+
+        //             const newimage = document.createElement('img');
+        //             newimage.setAttribute('src', data.data[i].images[0]);
+        //             newimage.classList.add('image');
+                    
+        //             document.querySelector('.newcontainer').appendChild(newimage);
+                    
+                    
+        //             const newname = document.createElement('span');
+        //             newname.classList.add('name');
+        //             newname.textContent = data.data[i].name;
+        //             document.querySelector('.newcontainer').appendChild(newname);
+                    
+
+        //             const newcategory = document.createElement('span');
+        //             newcategory.textContent = data.data[i].category;
+        //             document.querySelector('.newcontainer').appendChild(newcategory);
+                    
+                    
+
+           
+        //     });
+        //     i++;
+
+        //     }
+        
+            
+
+        //  function loadNewCards(){
+
+        //     for (i =0; i<12; i++){
+        //         const newtest = document.createElement('div');
+        //         newtest.classList.add('newcontent_box'+ [i]);
+        //         document.querySelector('.newcontainer').appendChild(newtest);
+               
+               
+        //     }
+        //     for(i=0; i<12; i++){
+        //         const spanforimage = document.createElement('span');
+        //         spanforimage.classList.add('forimage'+ [i]);
+        //         document.querySelector('.newcontent_box'+[i]).appendChild(spanforimage);
+        //     }
+
+
+
+        //     fetch('http://54.205.131.239:3000/api/attractions?page=1').then(function(response){return response.json();}).then(function(data){
+                
+                
+        //         for (i=0; i<12; i++){
+        //         const newimage = document.createElement('img');
+        //         // newimage.textContent = data.data[0].images[0];
+        //         newimage.classList.add('image');
+        //         newimage.setAttribute('src',data.data[i].images[0])
+        //         document.querySelector('.forimage'+[i]).appendChild(newimage);
+                
+        //         const newname = document.createElement('span');
+        //         newname.textContent = data.data[i].name;
+        //         newname.classList.add('title');
+        //         document.querySelector('.newcontent_box'+[i]).appendChild(newname);
+     
+
+        //         const newmrt = document.createElement('span');
+        //         newmrt.textContent = data.data[i].mrt;
+        //         newmrt.classList.add('mrt');
+        //         document.querySelector('.newcontent_box'+[i]).appendChild(newmrt);
+
+        //         const newcategory = document.createElement('span');
+        //         newcategory.textContent = data.data[i].category
+        //         newcategory.classList.add('category_last');
+        //         document.querySelector('.newcontent_box'+[i]).appendChild(newcategory);
+        //         // console.log(data)
+        //         }
+        //     });
+        // }
+        
+        
+
+        //2-5
+        fetch('http://54.205.131.239:3000/api/categories').then(function (response){return response.json();}).then(function(data){
+            
+           console.log(data);
+
+            const categoryList =[];
+           for(i=0; i< data.data.length; i++){
+            categoryList.push(data.data[i])
+           };
+           console.log(categoryList);
+
+
+           for(i=0; i< categoryList.length;i++){
+           const categorySpan = document.createElement('span');
+           categorySpan.textContent= categoryList[i];
+           categorySpan.classList.add('insert_categotySpan');
+           categorySpan.setAttribute('onlick',Fillin(this));
+           document.querySelector('#forcategorylist').appendChild(categorySpan);
+        
+            }
+
+            // document.getElementById('forcategorylist').style.display = "none";
+
+
+
+
+        });
+
+
+        function changeToabout() {
+
+        let showspan = document.getElementById('forcategorylist');
+        showspan.style.display =    "block";
+
+        }
+
+        function Fillin(elem){
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    </script>
+
+
+
+</html>

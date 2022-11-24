@@ -1,5 +1,7 @@
 
 import mysql.connector
+from mysql.connector import pooling 
+from mysql.connector import connect
 import json
 from flask import *
 from flask import request
@@ -8,12 +10,30 @@ from flask_cors import CORS
 
 
 
+#建立連接池
+dbconfig = {
+  "database": "Taipei_API",
+  "user":     "root",
+  "password": "Dennis860404_",
+}
+
+cnx = mysql.connector.connect(pool_name = "mypool",
+                              pool_size = 5, autocommit = True,
+                              **dbconfig)
+
+
+cnx = mysql.connector.connect(pool_name = "mypool", pool_size = 5)
+cnx = mysql.connector.connect(pool_name = "mypool", **dbconfig)
+cnx = mysql.connector.connect(pool_name = "mypool")
+
 conn = mysql.connector.connect(
     user='root', password='Dennis860404_', database='Taipei_API'
 )
-conn.reconnect(attempts=1, delay=0)
+
+cnx.reconnect(attempts=1, delay=0)
 
 app=Flask(__name__)
+
 CORS(app)
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
@@ -164,12 +184,14 @@ def pageAndfilter():
             })
                 
 
+                
+
 
 
 @app.route("/api/attraction/<attractionId>") #第二隻api
 def findbyattid(attractionId):
     index = attractionId
-    cursor = conn.cursor(buffered=True)
+    cursor = cnx.cursor(buffered=True)
     
     errorcheckQuery = "SELECT attid FROM Attraction;"
     cursor.execute(errorcheckQuery)
@@ -203,6 +225,10 @@ def findbyattid(attractionId):
                     "lng":resultList[0][9],
                     "images": finalList
         }
+        cnx.commit()
+        cursor.close()
+        cnx.close()
+        
     
         return jsonify({"data": finalResult })
     
@@ -220,18 +246,22 @@ def findbyattid(attractionId):
 @app.route("/api/categories") #第三隻api
 def findCat():
 	
-	cursor = conn.cursor(buffered=True)
+	cursor = cnx.cursor(buffered=True)
 	query = "SELECT DISTINCT category FROM Attraction;"
 	cursor.execute(query)
 	catList = cursor.fetchall()
+    
+    
 	
 	finalList = []
+
+    
 	for i in range(len(catList)):
 		finalList.append(catList[i][0])
-	
-	
+    
+  
+        
 	return jsonify({"data":finalList})
-
 
 #error handler 500 錯誤
 @app.errorhandler(500)
