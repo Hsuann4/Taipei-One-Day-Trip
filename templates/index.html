@@ -36,8 +36,8 @@
 
       
         
-       
-            <div class="container">
+        <div>
+            <div id="container" class="container">
                 <div id ='test' class="content_box">
                     <span id="imagespan0" class="image"></span>
                     <span id="namespan0" class="title"></span>
@@ -69,7 +69,7 @@
 
             
 
-            <div class="container">
+            <div id="container" class="container">
             
                 <div id ='test' class="content_box">
                     <span id="imagespan4" class="image"></span>
@@ -102,7 +102,7 @@
             </div>
 
 
-            <div class="container">
+            <div id="container" class="container">
 
                 <div id ='test' class="content_box">
                     <span id="imagespan8" class="image"></span>
@@ -133,6 +133,7 @@
                 </div>
 
             </div>
+        </div> 
        
         <div  class="newcontainer">
             
@@ -148,18 +149,18 @@
     
     <script>
         fetch("http://0.0.0.0:3000/api/attractions?page=0").then(function(response){ return response.json();}).then(function(data){
-            console.log(data);
-            console.log(data.data[0]);
-            console.log(data.data[0].name);
-            console.log(data.data[0].category);
-            console.log(data.data[0].mrt);
-            console.log(data.data[0].images[0]);
+            // console.log(data);
+            // console.log(data.data[0]);
+            // console.log(data.data[0].name);
+            // console.log(data.data[0].category);
+            // console.log(data.data[0].mrt);
+            // console.log(data.data[0].images[0]);
 
 
             
             for (i = 0; i < data.data.length; i++) {
             
-                let gettag = document.getElementById('namespan'+[i]);
+            let gettag = document.getElementById('namespan'+[i]);
             gettag.innerHTML=(data.data[i].name);
 
             let gettag1 = document.getElementById('mrtspan'+[i]);
@@ -184,82 +185,85 @@
         // 找標的物件
 
        
-        // // 法一
-        // const intersectionObserver = new IntersectionObserver((entries) => {
-        //     // console.log(entries);
-        //     if (entries[0].isIntersecting){
-
-               
-
-        //         console.log("got it");
-        //         intersectionObserver.unobserve(entries[0].target) //觀察完第一筆 載入後 就要去抓nextpage
-        //         // intersectionObserver.observe(document.querySelector('.category_last'))
-        //         // return loadNewCards()
-
-
-
-
-        //     }else{
-        //         console.log("leaving");
-        //     }
-
-        // });
-       
-
-        // intersectionObserver.observe(document.querySelector('#categoryspan11'));
-
-
+        // 法一
         
-        // 法二
-        // window.addEventListener('scroll', ()=>{
-        //     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        //     const scrolled = window.scrollY;
+        //我的
 
-        //     if(scrolled === scrollable){
+        // let observer = new IntersectionObserver(entries);
 
+        // let target = document.querySelectorAll('div.container:last-child')[0];
+        // observer.observe(target);
+        // let callback = (entries, observer) => {
 
-        //         loadNewCards();
+        //     console.log(entries[0]);
+        // }
 
-        //     }
+        // 孟的
+        const intersectionObserver = new IntersectionObserver((entries) => {
+            console.log(['entries'], entries);
+            const lastContent = entries[0];
+            console.log(lastContent.isIntersecting);
+        
+            // if (!lastContent.isInterescting);
+            
 
+            
+            // intersectionObserver.unobserve(lastContent.target)
 
-        // })
+            if(entries[0].isIntersecting){
+                console.log('got it ');
+                loadNewCards();
 
+                
 
+            }else{
 
-
-
+                console.log('leaving');
+            }
+            
+        }, {rootMargin: '-100px'});
+        const lastContent = document.querySelectorAll('div.container:last-child')[0];
+        // console.log(lastContent);
+        intersectionObserver.observe(lastContent);
+        // console.log(lastContent);
+       
+        
+       
+  
 
         // 載入新的分頁
-        // function loadNewCards(){
-        //     let i = 0;
-        //     while(i < 11){
-        //         fetch('http://54.205.131.239:3000/api/attractions?page=1').then(function(response){return response.json();}).then(function(data){
+        function loadNewCards(){
 
-        //             const newimage = document.createElement('img');
-        //             newimage.setAttribute('src', data.data[i].images[0]);
-        //             newimage.classList.add('image');
-                    
-        //             document.querySelector('.newcontainer').appendChild(newimage);
-                    
-                    
-        //             const newname = document.createElement('span');
-        //             newname.classList.add('name');
-        //             newname.textContent = data.data[i].name;
-        //             document.querySelector('.newcontainer').appendChild(newname);
-                    
+            console.log("test!!!!");
+            let i = 0;
+            while(i < 11){
+                fetch('http://0.0.0.0:3000/api/attractions?page=1').then(function(response){return response.json();}).then(function(data){
 
-        //             const newcategory = document.createElement('span');
-        //             newcategory.textContent = data.data[i].category;
-        //             document.querySelector('.newcontainer').appendChild(newcategory);
+                    const newimage = document.createElement('img');
+                    newimage.setAttribute('src', data.data[i].images[0]);
+                    newimage.classList.add('image');
                     
+                    document.querySelector('.newcontainer').appendChild(newimage);
+                    
+                    
+                    const newname = document.createElement('span');
+                    newname.classList.add('name');
+                    newname.textContent = data.data[i].name;
+                    document.querySelector('.newcontainer').appendChild(newname);
                     
 
+                    const newcategory = document.createElement('span');
+                    newcategory.textContent = data.data[i].category;
+                    document.querySelector('.newcontainer').appendChild(newcategory);
+                    
+                });                    
+                i++;
            
-        //     });
-        //     i++;
+            }
+            
+          
 
-        //     }
+        }
         
             
 
@@ -280,7 +284,8 @@
 
 
 
-        //     fetch('http://54.205.131.239:3000/api/attractions?page=1').then(function(response){return response.json();}).then(function(data){
+
+        //     fetch('http://0.0.0.0:3000/api/attractions?page=1').then(function(response){return response.json();}).then(function(data){
                 
                 
         //         for (i=0; i<12; i++){
@@ -310,10 +315,65 @@
         //     });
         // }
         
+
+
+
+        //2-4
+
+//         function senddata(url, method,body){ 
+//             const dataresponse =  fetch(url).then(respons => response.json());
+//             return dataresponse;
+//         }   
+
+//         function clickToSend(){ //給form表單用的
+
+//             senddata(`http://127.0.0.1:3000/api/page=0&keyword=${keyword}`).then(response => {
+            
+
+//             //移除內容
+            
+//             let element = document.getElementById("test");
+//             while (element.firstChild) {
+//             element.removeChild(element.firstChild);
+// }
+
+//             //插入新的dom 內容
+
+
+//             let newimagespan = document.createElement('span')
+//             newimagespan.classList.add('image');
+
+//             let newnamespan = document.createElement('span')
+//             newnamespan.innerHTML = response.data.data.name[i];
+//             newnamespan.classList.add('name');
+            
+//             let newmrtspan = document.createElement('span')
+//             newmrtspan.innerHTML = response.data.data.mrt[i];
+//             newmrtspan.classList.add('mrt');
+            
+//             let newcategoryspan = document.createElement('span')
+//             newcategoryspan.innerHTML = document.data.data.mrt[i];
+//             newcategoryspan.classList.add('category');
+        
+       
+//             });
+            
+//             //如何知道是第幾頁？   
+
+//         }
+
+
+
+
+
+
+
+
+
         
 
         //2-5
-        // fetch('http://54.205.131.239:3000/api/categories').then(function (response){return response.json();}).then(function(data){
+        // fetch('http://0.0.0.0:3000/api/categories').then(function (response){return response.json();}).then(function(data){
             
         //    console.log(data);
 
@@ -334,7 +394,7 @@
         
         //     }
 
-        //     // document.getElementById('forcategorylist').style.display = "none";
+        //     document.getElementById('forcategorylist').style.display = "none";
 
 
 
