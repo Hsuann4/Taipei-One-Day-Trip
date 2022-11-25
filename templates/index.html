@@ -147,13 +147,13 @@
     
     
     <script>
-        fetch("http://54.205.131.239:3000/api/attractions?page=0").then(function(response){ return response.json();}).then(function(data){
-            // console.log(data);
-            // console.log(data.data[0]);
-            // console.log(data.data[0].name);
-            // console.log(data.data[0].category);
-            // console.log(data.data[0].mrt);
-            // console.log(data.data[0].images[0]);
+        fetch("http://0.0.0.0:3000/api/attractions?page=0").then(function(response){ return response.json();}).then(function(data){
+            console.log(data);
+            console.log(data.data[0]);
+            console.log(data.data[0].name);
+            console.log(data.data[0].category);
+            console.log(data.data[0].mrt);
+            console.log(data.data[0].images[0]);
 
 
             
@@ -313,40 +313,40 @@
         
 
         //2-5
-        fetch('http://54.205.131.239:3000/api/categories').then(function (response){return response.json();}).then(function(data){
+        // fetch('http://54.205.131.239:3000/api/categories').then(function (response){return response.json();}).then(function(data){
             
-           console.log(data);
+        //    console.log(data);
 
-            const categoryList =[];
-           for(i=0; i< data.data.length; i++){
-            categoryList.push(data.data[i])
-           };
-           console.log(categoryList);
+        //     const categoryList =[];
+        //    for(i=0; i< data.data.length; i++){
+        //     categoryList.push(data.data[i])
+        //    };
+        //    console.log(categoryList);
 
 
-           for(i=0; i< categoryList.length;i++){
-           const categorySpan = document.createElement('span');
-           categorySpan.textContent= categoryList[i];
-           categorySpan.classList.add('insert_categotySpan');
-           categorySpan.setAttribute('id','insertcat');
+        //    for(i=0; i< categoryList.length;i++){
+        //    const categorySpan = document.createElement('span');
+        //    categorySpan.textContent= categoryList[i];
+        //    categorySpan.classList.add('insert_categotySpan');
+        //    categorySpan.setAttribute('id','insertcat');
            
-           document.querySelector('#forcategorylist').appendChild(categorySpan);
+        //    document.querySelector('#forcategorylist').appendChild(categorySpan);
         
-            }
+        //     }
 
-            // document.getElementById('forcategorylist').style.display = "none";
-
-
+        //     // document.getElementById('forcategorylist').style.display = "none";
 
 
-        });
 
 
-        function changeToabout() {
+        // });
 
-        let showspan = document.querySelector('#forcategorylist');
-        showspan.style.display = 'block';
-        }
+
+        // function changeToabout() {
+
+        // let showspan = document.querySelector('#forcategorylist');
+        // showspan.style.display = 'block';
+        // }
 
         // var insertvalue = document.querySelector('.insert_categotySpan');
         // console.log(insertvalue);

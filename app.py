@@ -20,16 +20,15 @@ from flask_cors import CORS
 conn = mysql.connector.connect(
     user='root', password='Dennis860404_', database='Taipei_API'
 )
-
 conn.reconnect(attempts=1,delay=0)
+cursor = conn.cursor()
 
 
 app=Flask(__name__)
-
-CORS(app)
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.config['JSON_SORT_KEYS'] = False
+CORS(app)
 
 
 
@@ -55,16 +54,15 @@ def thankyou():
 #   "user":     "root",
 #   "password": "Dennis860404_",
 # }
-
 # cnx = mysql.connector.pooling.MySQLConnectionPool(pool_name = "mypool",
 #                               pool_size = 5, autocommit = True,
 #                               **dbconfig)
-
 # cnx.reconnect(attempts=1, delay=0)
-
 # cursor = cnx.get_connection()
 
-cursor = conn.cursor()
+
+
+
 
 #API
 
@@ -81,18 +79,14 @@ def pageAndfilter():
 
         if  inputCondition_page is not None and inputCondition_keyword is None:
             #處理未篩選頁碼
+            
             cursor = conn.cursor(buffered =True)
-            # cursor = conn.cursor(buffered= True)
-           
             pageCountquery = "SELECT ceil(count(*)/12) AS pageTotal FROM  Attraction;"
             cursor.execute(pageCountquery)
             pageTotal = cursor.fetchall()
             pageTotal1 = pageTotal[0][0]
             conn.commit()
-            # cursor.close()
-            # cnx1.close()
-            
-            
+        
             
             if pageInput + 1 < pageTotal1:
                 nextpage = pageInput + 1
@@ -101,15 +95,12 @@ def pageAndfilter():
 
             #處理未篩選內容
             cursor = conn.cursor(buffered =True)
-            # cursor = conn.cursor(buffered=True)
-            page1query = "SELECT * FROM Attraction ORDER BY attid LIMIT %s , 12;"
-            pageInfo = ((str((pageInput)*12)),)
-            cursor.execute(page1query, pageInfo)
+            pageInfo = int(pageInput)*12
+            page1query = f'SELECT * FROM Attraction ORDER BY attid LIMIT {pageInfo} , 12;'
+            cursor.execute(page1query)
             p1result = cursor.fetchall()
             conn.commit()
-            # cursor.close()
             
-
             #處理未篩選圖片連結
             listtest = []
             for i in range(len(p1result)):
@@ -214,25 +205,16 @@ def pageAndfilter():
                             "data": pageResultlist
             })
                 
-            # cnx2.commit()
-            # cursor.close()
-            # cnx.close()
-
-                
-
-
+    
 
 @app.route("/api/attraction/<attractionId>") #第二隻api
 def findbyattid(attractionId):
     index = attractionId
-    # cursor = cnx.get_connection()
     cursor = conn.cursor(buffered =True)
     errorcheckQuery = "SELECT attid FROM Attraction;"
     cursor.execute(errorcheckQuery)
     checkRawlist = cursor.fetchall()
-    # cnx1.commit()
-    # cursor.close()
-    # cnx.close()
+   
     
     checklist =[]
     for i in range(len(checkRawlist)):
@@ -241,20 +223,17 @@ def findbyattid(attractionId):
     
     if int(index) in checklist:
         cursor = conn.cursor(buffered =True)
-        # cursor = cnx.get_connection()
+       
         query = "SELECT *  FROM Attraction WHERE attid = %s;"
         criteria = (index, )
         cursor.execute(query, criteria)
         resultList = cursor.fetchall()
         conn.commit()
-        # cnx.commit()
-        # cursor.close()
-        # cnx.close()
+      
         imageRawlist = resultList[0][10]
         imagesplit = imageRawlist.split("http")
         imagesplit = ["http" + img for img in imagesplit]
         finalList = imagesplit[1:]
-        # print(finalList)
 
         finalResult = {"id":resultList[0][1],
                     "name":resultList[0][2],
@@ -280,29 +259,23 @@ def findbyattid(attractionId):
         return jsonify({"error": True,
                         "message":"伺服器錯誤"})
         
-  
-    # cursor.close()
     
-
-
 @app.route("/api/categories")
 def findCat():
-    # cursor = cnx.get_connection()
     cursor = conn.cursor(buffered =True)
     query = "SELECT DISTINCT category FROM Attraction;"
     cursor.execute(query)
-    catList = cursor.fetchall
-    conn.commit
-    
+    catList = cursor.fetchall()
+   
+
     finalList = []
     for i in range(len(catList)):
-        finalList.append([i][0])
-        # conn.commit()
-        # cursor.close()
+        finalList.append(catList[i][0])
         
-        return jsonify({'data': finalList})
+    return jsonify({'data': finalList})
+    conn.commit()
+        
     
-        # cnx.close()
     
     
     
