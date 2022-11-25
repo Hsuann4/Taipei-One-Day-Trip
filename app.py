@@ -3,6 +3,7 @@ import mysql.connector
 from mysql.connector import pooling 
 from mysql.connector import connect
 import json
+import math
 from flask import *
 from flask import request
 from flask import jsonify
@@ -56,7 +57,15 @@ def pageAndfilter():
             #處理未篩選頁碼
             
             cursor = conn.cursor(buffered =True)
-            pageCountquery = "SELECT ceil(count(*)/12) AS pageTotal FROM  Attraction;"
+            pagecountpre = 'SELECT ceil(count(*)) AS pageTotal FROM  Attraction;'
+            cursor.execute(pagecountpre)
+            pageTotalpre = cursor.fetchall()
+            pageTotalpre1 = pageTotal[0][0]
+            pageTotalpre = str(pageTotalpre)/12
+            pageTotalpre = math.celi(pageTotalpre)
+            conn.commit()
+            cursor = conn.cursor(buffered =True)
+            pageCountquery = f'SELECT {pageTotalpre} AS pageTotal FROM  Attraction;'
             cursor.execute(pageCountquery)
             pageTotal = cursor.fetchall()
             pageTotal1 = pageTotal[0][0]
