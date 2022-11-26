@@ -11,12 +11,26 @@ from flask_cors import CORS
 
 
 
-conn = mysql.connector.connect(
-    user='root', password='Dennis860404_', database='Taipei_API'
+# conn = mysql.connector.connect(
+#     user='root', password='Dennis860404_', database='Taipei_API'
   
-)
-conn.reconnect(attempts=1,delay=0)
-cursor = conn.cursor()
+# )
+
+
+dbconfig = {
+  "database": "Taipei_API",
+  "user":     "root",
+  "password": "Dennis860404_"
+}
+
+
+pool = mysql.connector.pooling.MySQLConnectionPool(pool_name = "mypool",
+                              pool_size = 3,
+                              **dbconfig)
+
+
+# conn.reconnect(attempts=1,delay=0)
+# cursor = conn.cursor()
 
 
 app=Flask(__name__)
@@ -51,25 +65,26 @@ def pageAndfilter():
         inputCondition_keyword = request.args.get("keyword")
         pageInput = int(request.args.get("page")) 
         keywordInput = str(request.args.get("keyword"))
-
-
+        
+        conn = pool.get_connection()
+        cursor = conn.cursor()
         if  inputCondition_page is not None and inputCondition_keyword is None:
             #處理未篩選頁碼
             
-            cursor = conn.cursor(buffered =True)
+            # cursor = conn.cursor(buffered =True)
             pagecountpre = 'SELECT ceil(count(*)) AS pageTotal FROM  Attraction;'
             cursor.execute(pagecountpre)
             pageTotalpre = cursor.fetchall()
-            pageTotalpre1 = pageTotal[0][0]
-            pageTotalpre = str(pageTotalpre)/12
-            pageTotalpre = math.celi(pageTotalpre)
-            conn.commit()
-            cursor = conn.cursor(buffered =True)
-            pageCountquery = f'SELECT {pageTotalpre} AS pageTotal FROM  Attraction;'
+            pageTotalpre1 = pageTotalpre[0][0]
+            pageTotalpre = pageTotalpre1/12
+            pageTotalpre = math.ceil(pageTotalpre1)
+            
+            # cursor = conn.cursor(buffered =True)
+            pageCountquery = f'SELECT {str(pageTotalpre)} AS pageTotal FROM  Attraction;'
             cursor.execute(pageCountquery)
             pageTotal = cursor.fetchall()
             pageTotal1 = pageTotal[0][0]
-            conn.commit()
+            
         
             
             if pageInput + 1 < pageTotal1:
@@ -78,12 +93,12 @@ def pageAndfilter():
                 nextpage = None
 
             #處理未篩選內容
-            cursor = conn.cursor(buffered =True)
+            # cursor = conn.cursor(buffered =True)
             pageInfo = int(pageInput)*12
             page1query = f'SELECT * FROM Attraction ORDER BY attid LIMIT {pageInfo} , 12;'
             cursor.execute(page1query)
             p1result = cursor.fetchall()
-            conn.commit()
+            
             
             #處理未篩選圖片連結
             listtest = []
@@ -118,12 +133,12 @@ def pageAndfilter():
         elif inputCondition_page is not None and inputCondition_keyword is not None: 
             #下面是有篩選的
             #處理篩選資料後的頁碼
-            cursor = conn.cursor(buffered =True)
+            # cursor = conn.cursor(buffered =True)
             pageCountquery = "SELECT ceil(count(*)/12) FROM Attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s);"
             criteria = (keywordInput,keywordInput)
             cursor.execute(pageCountquery, criteria)
             pageTotal = cursor.fetchall()
-            conn.commit()
+            
            
         
             finalPagenumber = pageTotal[0][0] 
@@ -134,12 +149,12 @@ def pageAndfilter():
             
             
             #處理篩選資料後的內容
-            cursor = conn.cursor(buffered =True)
+            # cursor = conn.cursor(buffered =True)
             keywordResultquery = "SELECT * FROM Attraction WHERE category LIKE %s OR REGEXP_LIKE(name, %s) LIMIT %s, 12 ;"
             criteria = (keywordInput, keywordInput,((pageInput)*12))
             cursor.execute(keywordResultquery,criteria)
             keywordResult = cursor.fetchall()
-            conn.commit()
+            
     
                 
             #處理篩選資料後的圖面網址
@@ -179,7 +194,8 @@ def pageAndfilter():
 @app.route("/api/attraction/<attractionId>") #第二隻api
 def findbyattid(attractionId):
     index = attractionId
-    cursor = conn.cursor(buffered =True)
+    conn = pool.get_connection()
+    cursor = conn.cursor()
     errorcheckQuery = "SELECT attid FROM Attraction;"
     cursor.execute(errorcheckQuery)
     checkRawlist = cursor.fetchall()
@@ -189,16 +205,18 @@ def findbyattid(attractionId):
     for i in range(len(checkRawlist)):
         checklist.append(checkRawlist[i][0])
     
-    
+
+  
     if int(index) in checklist:
         
-        cursor = conn.cursor(buffered =True)
+        # cursor = conn.cursor(buffered =True)
        
         query = "SELECT *  FROM Attraction WHERE attid = %s;"
         criteria = (index, )
         cursor.execute(query, criteria)
         resultList = cursor.fetchall()
-        conn.commit()
+        
+        
       
         imageRawlist = resultList[0][10]
         imagesplit = imageRawlist.split("http")
@@ -232,11 +250,12 @@ def findbyattid(attractionId):
     
 @app.route("/api/categories")
 def findCat():
-    cursor = conn.cursor(buffered =True)
+    conn = pool.get_connection()
+    cursor = conn.cursor()
     query = "SELECT DISTINCT category FROM Attraction;"
     cursor.execute(query)
     catList = cursor.fetchall()
-    conn.commit()
+    
    
 
     finalList = []
