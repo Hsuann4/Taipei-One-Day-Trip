@@ -25,7 +25,7 @@ dbconfig = {
 
 
 pool = mysql.connector.pooling.MySQLConnectionPool(pool_name = "mypool",
-                              pool_size = 3,
+                              pool_size = 5,
                               **dbconfig)
 
 
@@ -125,7 +125,7 @@ def pageAndfilter():
                                     "images": finalList
                                     }
                     pageResultlist.append(singleResult)
-
+            conn.close()
             return jsonify({"nextpage": nextpage,
                         "data": pageResultlist
             })
@@ -183,11 +183,12 @@ def pageAndfilter():
                                     }
                     pageResultlist.append(singleResult)
 
-            
+            conn.close()
 
             return jsonify({"nextpage": nextpage,
                             "data": pageResultlist
             })
+            
                 
     
 
@@ -234,7 +235,7 @@ def findbyattid(attractionId):
                     "lng":resultList[0][9],
                     "images": finalList
         }
-       
+        conn.close()
     
         return jsonify({"data": finalResult })
     
@@ -242,11 +243,11 @@ def findbyattid(attractionId):
     elif int(index) not in checklist:
         return jsonify({"error": True,
                        "message": "景點編號錯誤"})
-    
+        conn.close()
     else:
         return jsonify({"error": True,
                         "message":"伺服器錯誤"})
-        
+        conn.close()
     
 @app.route("/api/categories")
 def findCat():
@@ -261,7 +262,8 @@ def findCat():
     finalList = []
     for i in range(len(catList)):
         finalList.append(catList[i][0])
-        
+    
+    conn.close()    
     return jsonify({'data': finalList})
   
         
